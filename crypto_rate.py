@@ -31,9 +31,9 @@ def get_rate(): #функция получения курса криптовал
             exchange_rate = data[crypto_id][t_currency_id] # получаем курс криптовалюты
             crypto_cur_lbl.config(text=f'Курс криптовалюты: 1 {crypto_names[crypto][1]} = {exchange_rate} {t_currency_id.upper():.5f}')
             last_upd_t = data[crypto_id]['last_updated_at'] # время последнего обновления
-            last_upd = datetime.fromtimestamp(last_upd_t).strftime('%d.%m.%Y')
+            last_upd = datetime.fromtimestamp(last_upd_t).strftime('%d.%m.%Y в %H:%M')
             result = exchange_rate*amount_
-            rate_entry.delete(0,END)
+            rate_entry.delete(0,END) # очищение стоимости криптовалюты
             rate_entry.insert(0,f'{result:.4f}')
             last_upd_lbl.config(text=f'Данные обновлены {last_upd}')
         except Exception as e:
@@ -91,7 +91,6 @@ crypto_names = {
     'XMR (Monero)':['monero','XMR'],
     'XRP (Ripple)':['ripple','XRP']
 }
-
 
 currency_names = {
     'CNY (Китайский юань)': 'cny',
