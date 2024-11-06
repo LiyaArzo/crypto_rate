@@ -56,17 +56,33 @@ def validate_entry(entry):
 
 
 def recalc_cur(event):
-    amount = float(crypto_amount.get())
-    currency = amount * exchange_rate
-    rate_entry.delete(0, END)
-    rate_entry.insert(0,str(currency))
+    cry_amount = crypto_amount.get()
+    if cry_amount and exchange_rate:
+        if cry_amount.replace('.','',1).isalnum():
+            amount = float(cry_amount)
+            currency = amount * exchange_rate
+            rate_entry.delete(0, END)
+            rate_entry.insert(0,str(currency))
+        else:
+            mb.showerror('Ошибка', f'Вы ввели неверное значение - {cry_amount}')
+            crypto_amount.delete(0, END)
+    else:
+        return None
 
 
 def recalc_crypto(event):
-    amount = float(rate_entry.get())
-    crypto = amount / exchange_rate
-    crypto_amount.delete(0, END)
-    crypto_amount.insert(0, f'{crypto:.4f}')
+    rate_amount = rate_entry.get()
+    if rate_amount and exchange_rate:
+        if rate_amount.replace('.','',1).isalnum():
+            amount = float(rate_amount)
+            crypto = amount / exchange_rate
+            crypto_amount.delete(0, END)
+            crypto_amount.insert(0, f'{crypto:.4f}')
+        else:
+            mb.showerror('Ошибка', f'Вы ввели неверное значение - {rate_amount}')
+            rate_entry.delete(0, END)
+    else:
+        return None
 
 
 window = Tk()
@@ -101,7 +117,6 @@ currency_names = {
     'RUB (Российский рубль)': 'rub',
     'USD (Доллар США)': 'usd'
 }
-
 
 
 url_list='https://api.coingecko.com/api/v3/coins/list'
