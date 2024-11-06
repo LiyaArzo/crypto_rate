@@ -4,11 +4,13 @@ from tkinter import messagebox as mb
 from datetime import datetime
 import requests
 
-
 exchange_rate = None # переменная для курса выбранной криптовалюты
+counter = 0 # счетчик для количества запросов к api
+
 
 def get_rate(): #функция получения курса криптовалют
     global exchange_rate
+    global counter
     crypto = crypto_combo.get() # название криптовалюты
     t_currency = currency_combo.get() # название целевой валюты
     crypto_id = crypto_names[crypto] # id криптовалюты для api
@@ -18,6 +20,8 @@ def get_rate(): #функция получения курса криптовал
         amount_ = float(amount_text)
         response = requests.get(f'https://api.coingecko.com/api/v3/simple/price?ids={crypto_id}&vs_currencies={t_currency_id}&include_last_updated_at=true')
         response.raise_for_status()
+        counter += 1 # если не возникло исключение, счетчик увеличится на 1
+        counter_lbl.config(text=f'Использовано запросов: {counter}')
         data = response.json()
         exchange_rate = data[crypto_id][t_currency_id]
         last_upd_t = data[crypto_id]['last_updated_at'] # время последнего обновления
@@ -135,6 +139,10 @@ crypto_cur_lbl.grid(row=5,column=0,columnspan=2,pady=20)
 # Метка для отображения времени последнего обновления данных о курсе валюты
 last_upd_lbl = Label(text='',font='Arial 10')
 last_upd_lbl.grid(row=6,column=0,columnspan=2,pady=20)
+
+# Метка для отображения счетчика
+counter_lbl = Label(text='',font='Arial 10')
+counter_lbl.grid(row=7,column=0,columnspan=2,pady=20)
 
 #get_rate()
 
