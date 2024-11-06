@@ -29,10 +29,10 @@ def get_rate(): #функция получения курса криптовал
             counter_lbl.config(text=f'Использовано запросов: {counter}')
             data = response.json()
             exchange_rate = data[crypto_id][t_currency_id] # получаем курс криптовалюты
-            crypto_cur_lbl.config(text=f'Курс криптовалюты: 1 {crypto_names[crypto][1]} = {exchange_rate} {t_currency_id.upper():.5f}')
+            crypto_cur_lbl.config(text=f'Курс криптовалюты: 1 {crypto_names[crypto][1]} = {exchange_rate:.5f} {t_currency_id.upper()}')
             last_upd_t = data[crypto_id]['last_updated_at'] # время последнего обновления
             last_upd = datetime.fromtimestamp(last_upd_t).strftime('%d.%m.%Y в %H:%M')
-            result = exchange_rate*amount_
+            result = exchange_rate * amount_
             rate_entry.delete(0,END) # очищение стоимости криптовалюты
             rate_entry.insert(0,f'{result:.4f}')
             last_upd_lbl.config(text=f'Данные обновлены {last_upd}')
@@ -57,13 +57,14 @@ def validate_entry(entry):
 
 def recalc_cur(event):
     amount = float(crypto_amount.get())
-    currency = amount*exchange_rate
+    currency = amount * exchange_rate
     rate_entry.delete(0, END)
     rate_entry.insert(0,str(currency))
 
+
 def recalc_crypto(event):
     amount = float(rate_entry.get())
-    crypto = amount/exchange_rate
+    crypto = amount / exchange_rate
     crypto_amount.delete(0, END)
     crypto_amount.insert(0, f'{crypto:.4f}')
 
@@ -153,6 +154,6 @@ last_upd_lbl.grid(row=6,column=0,columnspan=2,pady=20)
 counter_lbl = Label(text='',font='Arial 10')
 counter_lbl.grid(row=7,column=0,columnspan=2,pady=20)
 
-#get_rate()
+get_rate()
 
 window.mainloop()
