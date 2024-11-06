@@ -60,26 +60,26 @@ currency_names = {
 url_list='https://api.coingecko.com/api/v3/coins/list'
 
 
-Label(text='Криптовалюта').pack(padx=10,pady=10)
+Label(text='Криптовалюта').grid(row=0,column=0,columnspan=2,sticky='ew')
+
+crypto_emount = ttk.Entry()
+crypto_emount.grid(row=1,column=0)
 crypto_combo = ttk.Combobox(values=list(crypto_names.keys()),state="readonly")
-crypto_combo.pack(padx=10,pady=10)
+crypto_combo.grid(row=1,column=1)
 crypto_combo.set('BTC (Bitcoin)')
 
-Label(text='Целевая валюта').pack(padx=10,pady=10)
+Label(text='Целевая валюта').grid(row=2,column=0,columnspan=2,sticky='ew')
+lbl = Label(text='')
+lbl.grid(row=3,column=0)
 currency_combo = ttk.Combobox(values=list(currency_names.keys()),state="readonly")
-currency_combo.pack(padx=10,pady=10)
+currency_combo.grid(row=3,column=1)
 currency_combo.set('USD (Доллар США)')
-
-
 
 #crypto_combo.bind('<<ComboboxSelected>>',update_b_label)
 
-
-
 btn = ttk.Button(text='Получить курс криптовалюты', command=get_rate)
-btn.pack(padx=10,pady=10)
+btn.grid(row=4,column=0,columnspan=2)
 
-lbl = Label(text='')
-lbl.pack(padx=10,pady=10)
+
 
 window.mainloop()
