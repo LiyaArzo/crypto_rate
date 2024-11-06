@@ -7,7 +7,7 @@ import requests
 
 exchange_rate = None # переменная для курса выбранной криптовалюты
 
-def get_rate():
+def get_rate(): #функция получения курса криптовалют
     global exchange_rate
     crypto = crypto_names[crypto_combo.get()]
     t_currency = currency_names[currency_combo.get()]
@@ -25,6 +25,10 @@ def get_rate():
         last_upd_lbl.config(text=f'Данные обновлены {last_upd}')
     except Exception as e:
         mb.showerror('Ошибка', f'Возникла ошибка с соединением {e}')
+
+
+def update_rate():
+    pass
 
 
 def validate_entry(entry):
@@ -51,6 +55,7 @@ def recalc_crypto(event):
 window = Tk()
 window.title('Курсы криптовалют')
 window.geometry('400x420')
+window.iconbitmap('crypto.ico')
 
 crypto_names = {
     'ADA (Cardano)':'cardano',
@@ -118,7 +123,7 @@ currency_combo.set('USD (Доллар США)')
 currency_combo.bind('<<ComboboxSelected>>',lambda event:get_rate())
 
 # Кнопка для обновления курса криптовалюты
-btn = ttk.Button(text='Обновить', command=get_rate)
+btn = ttk.Button(text='Обновить', command=update_rate)
 btn.grid(row=4,column=0,columnspan=2,pady=20)
 
 # Метка для отображения информации о курсе криптовалюты
