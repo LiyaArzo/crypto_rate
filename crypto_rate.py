@@ -81,12 +81,14 @@ crypto_amount = ttk.Entry(font='Arial 10', justify='center')
 crypto_amount.insert(0,'1.00')
 crypto_amount.grid(row=1,column=0,ipady=2,padx=10)
 crypto_amount.bind('<KeyRelease>', lambda event:validate_entry(crypto_amount))
+#crypto_amount.bind()
 
 # Выпадающий список криптовалют
 crypto_combo = ttk.Combobox(values=list(crypto_names.keys()),
                             state="readonly",font='Arial 10', justify='center', width=27)
 crypto_combo.grid(row=1,column=1, ipady=2)
 crypto_combo.set('BTC (Bitcoin)')
+crypto_combo.bind('<<ComboboxSelected>>',lambda event:get_rate())
 
 Label(text='Целевая валюта', font='Arial 10 bold').grid(row=2,column=0,columnspan=2,sticky='ew',ipady=10)
 
@@ -100,6 +102,7 @@ currency_combo = ttk.Combobox(values=list(currency_names.keys()),
                               state="readonly", font='Arial 10', justify='center', width=27)
 currency_combo.grid(row=3,column=1, ipady=2)
 currency_combo.set('USD (Доллар США)')
+currency_combo.bind('<<ComboboxSelected>>',lambda event:get_rate())
 
 # Кнопка для обновления курса криптовалюты
 btn = ttk.Button(text='Обновить', command=get_rate)
