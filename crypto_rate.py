@@ -25,6 +25,13 @@ def get_rate():
         print(f'Возникла ошибка {e}')
 
 
+def validate_entry():
+    e = crypto_amount.get()
+    txt = ''.join(b for b in e if b in '0123456789.')
+    if e != txt:
+        crypto_amount.delete(0,END)
+        crypto_amount.insert(0,txt)
+
 
 window = Tk()
 window.title('Курсы криптовалют')
@@ -69,6 +76,7 @@ Label(text='Криптовалюта',font='Arial 16 bold').grid(row=0,column=0,
 crypto_amount = ttk.Entry(font='Arial 10', justify='center')
 crypto_amount.insert(0,'1.00')
 crypto_amount.grid(row=1,column=0,ipady=2,padx=10)
+crypto_amount.bind('<KeyRelease>', lambda event:validate_entry())
 
 crypto_combo = ttk.Combobox(values=list(crypto_names.keys()),
                             state="readonly",font='Arial 10', justify='center', width=27)
