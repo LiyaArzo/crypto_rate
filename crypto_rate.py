@@ -6,8 +6,10 @@ import time
 import requests
 
 
+exchange_rate = 1 # переменная для курса выбранной криптовалюты
 
 def get_rate():
+    global exchange_rate
     crypto = crypto_names[crypto_combo.get()]
     t_currency = currency_names[currency_combo.get()]
     amount_text = crypto_amount.get()
@@ -17,13 +19,13 @@ def get_rate():
         response.raise_for_status()
         data = response.json()
         exchange_rate = data[crypto][t_currency]
-        last_upd_t = data[crypto]['last_updated_at']
+        last_upd_t = data[crypto]['last_updated_at'] # время последнего обновления
         last_upd = datetime.fromtimestamp(last_upd_t).strftime('%d.%m.%Y')
         result = str(exchange_rate*amount_)
         rate_entry.insert(0,result)
         last_upd_lbl.config(text=f'Данные обновлены {last_upd}')
     except Exception as e:
-        print(f'Возникла ошибка {e}')
+        mb.showerror('Ошибка', f'Возникла ошибка с соединением {e}')
 
 
 def validate_entry(entry):
@@ -74,11 +76,13 @@ url_list='https://api.coingecko.com/api/v3/coins/list'
 
 Label(text='Криптовалюта',font='Arial 16 bold').grid(row=0,column=0,columnspan=2,sticky='ew',ipady=10)
 
+# Поле ввода количества криптовалюты, по умолчанию 1.00
 crypto_amount = ttk.Entry(font='Arial 10', justify='center')
 crypto_amount.insert(0,'1.00')
 crypto_amount.grid(row=1,column=0,ipady=2,padx=10)
 crypto_amount.bind('<KeyRelease>', lambda event:validate_entry(crypto_amount))
 
+# Выпадающий список криптовалют
 crypto_combo = ttk.Combobox(values=list(crypto_names.keys()),
                             state="readonly",font='Arial 10', justify='center', width=27)
 crypto_combo.grid(row=1,column=1, ipady=2)
@@ -86,18 +90,22 @@ crypto_combo.set('BTC (Bitcoin)')
 
 Label(text='Целевая валюта', font='Arial 10 bold').grid(row=2,column=0,columnspan=2,sticky='ew',ipady=10)
 
+# Поле для отображения стоимости криптовалюты в выбранной валюте, а также для ввода количества валюты
 rate_entry = ttk.Entry(font='Arial 10', justify='center')
 rate_entry.grid(row=3,column=0,ipady=2,padx=10)
 rate_entry.bind('<KeyRelease>', lambda event:validate_entry(rate_entry))
 
+# Выпадающий список валют
 currency_combo = ttk.Combobox(values=list(currency_names.keys()),
                               state="readonly", font='Arial 10', justify='center', width=27)
 currency_combo.grid(row=3,column=1, ipady=2)
 currency_combo.set('USD (Доллар США)')
 
+# Кнопка для обновления курса криптовалюты
 btn = ttk.Button(text='Обновить', command=get_rate)
 btn.grid(row=4,column=0,columnspan=2,pady=20)
 
+# Метка для отображения времени последнего обновления данных о курсе валюты
 last_upd_lbl = Label(text='',font='Arial 10')
 last_upd_lbl.grid(row=5,column=0,columnspan=2,pady=20)
 
