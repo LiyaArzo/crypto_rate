@@ -19,6 +19,8 @@ def get_rate():
         exchange_rate = data[crypto][t_currency]
         last_upd = data[crypto]['last_updated_at']
         print(exchange_rate*amount_, datetime.fromtimestamp(last_upd))
+        result = str(exchange_rate*amount_)
+        rate_lbl.config(text=result)
     except Exception as e:
         print(f'Возникла ошибка {e}')
 
@@ -26,7 +28,7 @@ def get_rate():
 
 window = Tk()
 window.title('Курсы криптовалют')
-window.geometry('360x420')
+window.geometry('400x420')
 
 crypto_names = {
     'ADA (Cardano)':'cardano',
@@ -62,26 +64,32 @@ currency_names = {
 url_list='https://api.coingecko.com/api/v3/coins/list'
 
 
-Label(text='Криптовалюта').grid(row=0,column=0,columnspan=2,sticky='ew')
+Label(text='Криптовалюта',font='Arial 16 bold').grid(row=0,column=0,columnspan=2,sticky='ew',ipady=10)
 
-crypto_amount = ttk.Entry()
-crypto_amount.grid(row=1,column=0)
-crypto_combo = ttk.Combobox(values=list(crypto_names.keys()),state="readonly")
-crypto_combo.grid(row=1,column=1)
+crypto_amount = ttk.Entry(font='Arial 10', justify='center')
+crypto_amount.insert(0,'1.00')
+crypto_amount.grid(row=1,column=0,ipady=2,padx=10)
+
+crypto_combo = ttk.Combobox(values=list(crypto_names.keys()),
+                            state="readonly",font='Arial 10', justify='center', width=27)
+crypto_combo.grid(row=1,column=1, ipady=2)
 crypto_combo.set('BTC (Bitcoin)')
 
-Label(text='Целевая валюта').grid(row=2,column=0,columnspan=2,sticky='ew')
-lbl = Label(text='')
-lbl.grid(row=3,column=0)
-currency_combo = ttk.Combobox(values=list(currency_names.keys()),state="readonly")
-currency_combo.grid(row=3,column=1)
+Label(text='Целевая валюта', font='Arial 10 bold').grid(row=2,column=0,columnspan=2,sticky='ew',ipady=10)
+
+rate_lbl = Label(text='',font='Arial 10', justify='center')
+rate_lbl.grid(row=3,column=0,ipady=2,padx=10)
+
+currency_combo = ttk.Combobox(values=list(currency_names.keys()),
+                              state="readonly", font='Arial 10', justify='center', width=27)
+currency_combo.grid(row=3,column=1, ipady=2)
 currency_combo.set('USD (Доллар США)')
 
 #crypto_combo.bind('<<ComboboxSelected>>',update_b_label)
 
 btn = ttk.Button(text='Получить курс криптовалюты', command=get_rate)
-btn.grid(row=4,column=0,columnspan=2)
+btn.grid(row=4,column=0,columnspan=2,pady=20)
 
-
+get_rate()
 
 window.mainloop()
