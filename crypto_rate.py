@@ -10,13 +10,15 @@ import requests
 def get_rate():
     crypto = crypto_names[crypto_combo.get()]
     t_currency = currency_names[currency_combo.get()]
+    amount_text = crypto_amount.get()
     try:
+        amount_ = float(amount_text)
         response = requests.get(f'https://api.coingecko.com/api/v3/simple/price?ids={crypto}&vs_currencies={t_currency}&include_last_updated_at=true')
         response.raise_for_status()
         data = response.json()
         exchange_rate = data[crypto][t_currency]
         last_upd = data[crypto]['last_updated_at']
-        print(exchange_rate, datetime.fromtimestamp(last_upd))
+        print(exchange_rate*amount_, datetime.fromtimestamp(last_upd))
     except Exception as e:
         print(f'Возникла ошибка {e}')
 
@@ -62,8 +64,8 @@ url_list='https://api.coingecko.com/api/v3/coins/list'
 
 Label(text='Криптовалюта').grid(row=0,column=0,columnspan=2,sticky='ew')
 
-crypto_emount = ttk.Entry()
-crypto_emount.grid(row=1,column=0)
+crypto_amount = ttk.Entry()
+crypto_amount.grid(row=1,column=0)
 crypto_combo = ttk.Combobox(values=list(crypto_names.keys()),state="readonly")
 crypto_combo.grid(row=1,column=1)
 crypto_combo.set('BTC (Bitcoin)')
