@@ -1,8 +1,10 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox as mb
+from tkinter import simpledialog as sd
 from datetime import datetime
 import requests
+
 
 exchange_rate = None # переменная для курса выбранной криптовалюты
 counter = 0 # счетчик для количества запросов к api
@@ -42,9 +44,18 @@ def get_rate(): #функция получения курса криптовал
         mb.showerror('Ошибка',f'Вы ввели неверное количество {crypto} - {amount_text}')
 
 
-
 def update_rate():
-    get_rate()
+    if exchange_rate:
+        answer = sd.askinteger('Уточните',
+                               f'Что нужно пересчитать:\n\n 1 - курс криптовалюты в выбранной валюте\n 2 - количество криптовалюты, которое можно приобрести за указанную сумму')
+        if answer == 1:
+            recalc_cur()
+        elif answer == 2:
+            recalc_crypto()
+        else:
+            return None
+    else:
+        get_rate()
 
 
 def validate_entry(entry):
@@ -55,7 +66,7 @@ def validate_entry(entry):
         entry.insert(0,txt)
 
 
-def recalc_cur(event):
+def recalc_cur():
     cry_amount = crypto_amount.get()
     if cry_amount and exchange_rate:
         if cry_amount.replace('.','',1).isalnum():
@@ -70,7 +81,7 @@ def recalc_cur(event):
         return None
 
 
-def recalc_crypto(event):
+def recalc_crypto():
     rate_amount = rate_entry.get()
     if rate_amount and exchange_rate:
         if rate_amount.replace('.','',1).isalnum():
@@ -88,7 +99,7 @@ def recalc_crypto(event):
 window = Tk()
 window.title('Курсы криптовалют')
 window.geometry('400x420')
-window.iconbitmap('crypto.ico')
+window.iconbitmap(default='crypto.ico')
 
 crypto_names = {
     'ADA (Cardano)':['cardano','ADA'],
@@ -129,7 +140,7 @@ crypto_amount = ttk.Entry(font='Arial 10', justify='center')
 crypto_amount.insert(0,'1.00')
 crypto_amount.grid(row=1,column=0,ipady=2,padx=10)
 crypto_amount.bind('<KeyRelease>', lambda event:validate_entry(crypto_amount))
-crypto_amount.bind('<Tab>',recalc_cur)
+crypto_amount.bind('<Tab>',lambda event: recalc_cur())
 
 # Выпадающий список криптовалют
 crypto_combo = ttk.Combobox(values=list(crypto_names.keys()),
@@ -144,7 +155,7 @@ Label(text='Целевая валюта', font='Arial 10 bold').grid(row=2,colum
 rate_entry = ttk.Entry(font='Arial 10', justify='center')
 rate_entry.grid(row=3,column=0,ipady=2,padx=10)
 rate_entry.bind('<KeyRelease>', lambda event:validate_entry(rate_entry))
-rate_entry.bind('<Tab>',recalc_crypto)
+rate_entry.bind('<Tab>',lambda event: recalc_crypto())
 
 # Выпадающий список валют
 currency_combo = ttk.Combobox(values=list(currency_names.keys()),
