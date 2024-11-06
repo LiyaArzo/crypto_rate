@@ -10,6 +10,7 @@ exchange_rate = None # переменная для курса выбранной
 counter = 0 # счетчик для количества запросов к api
 
 
+
 def get_rate(): #функция получения курса криптовалют
     global exchange_rate
     global counter
@@ -96,10 +97,41 @@ def recalc_crypto():
         return None
 
 
+def choose_crypto():
+    crypto_choose_win.title('About')
+    crypto_choose_win.geometry('300x150')
+    crypto_choose_win.iconify()
+    crypto_choose_win.grab_set()
+    Label(crypto_choose_win, text='Выберите криптовалюту', font='Arial 16 bold').pack(pady=10)
+    crypto_combo2.pack(pady=10)
+    crypto_combo2.set('BTC (Bitcoin)')
+    crypto_combo2.bind('<<ComboboxSelected>>', lambda event: show_info())
+    btn1 = Button(crypto_choose_win,text='Закрыть', command=lambda: exit_win(crypto_choose_win))
+    btn1.pack()
+
+
+
+def show_info():
+
+    b = crypto_combo2.get()
+    print(b)
+
+def exit_win(win):
+    win.destroy()
+
+
 window = Tk()
 window.title('Курсы криптовалют')
 window.geometry('400x420')
 window.iconbitmap(default='crypto.ico')
+
+mainmenu = Menu(window)
+window.config(menu=mainmenu)
+filemenu = Menu(mainmenu, tearoff=0)
+mainmenu.add_cascade(label="Криптовалюта", menu=filemenu)
+filemenu.add_command(label="Инфо", command=choose_crypto)
+
+
 
 crypto_names = {
     'ADA (Cardano)':['cardano','ADA'],
@@ -181,5 +213,11 @@ counter_lbl = Label(text='',font='Arial 10')
 counter_lbl.grid(row=7,column=0,columnspan=2,pady=20)
 
 get_rate()
+
+crypto_choose_win = Toplevel() # окно выбора криптовалюты
+crypto_choose_win.withdraw()
+crypto_combo2 = ttk.Combobox(crypto_choose_win, values=list(crypto_names.keys()),
+                                state="readonly", font='Arial 10', justify='center', width=27)
+
 
 window.mainloop()
