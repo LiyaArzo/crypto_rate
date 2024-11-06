@@ -5,7 +5,7 @@ from datetime import datetime
 import requests
 
 
-exchange_rate = 1 # переменная для курса выбранной криптовалюты
+exchange_rate = None # переменная для курса выбранной криптовалюты
 
 def get_rate():
     global exchange_rate
@@ -121,9 +121,13 @@ currency_combo.bind('<<ComboboxSelected>>',lambda event:get_rate())
 btn = ttk.Button(text='Обновить', command=get_rate)
 btn.grid(row=4,column=0,columnspan=2,pady=20)
 
+# Метка для отображения информации о курсе криптовалюты
+crypto_cur_lbl = Label(text='',font='Arial 10')
+crypto_cur_lbl.grid(row=5,column=0,columnspan=2,pady=20)
+
 # Метка для отображения времени последнего обновления данных о курсе валюты
 last_upd_lbl = Label(text='',font='Arial 10')
-last_upd_lbl.grid(row=5,column=0,columnspan=2,pady=20)
+last_upd_lbl.grid(row=6,column=0,columnspan=2,pady=20)
 
 #get_rate()
 
