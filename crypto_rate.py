@@ -9,16 +9,18 @@ exchange_rate = None # переменная для курса выбранной
 
 def get_rate(): #функция получения курса криптовалют
     global exchange_rate
-    crypto = crypto_names[crypto_combo.get()]
-    t_currency = currency_names[currency_combo.get()]
-    amount_text = crypto_amount.get()
+    crypto = crypto_combo.get() # название криптовалюты
+    t_currency = currency_combo.get() # название целевой валюты
+    crypto_id = crypto_names[crypto] # id криптовалюты для api
+    t_currency_id = currency_names[t_currency] # id валюты для api
+    amount_text = crypto_amount.get() # количество криптовалюты
     try:
         amount_ = float(amount_text)
-        response = requests.get(f'https://api.coingecko.com/api/v3/simple/price?ids={crypto}&vs_currencies={t_currency}&include_last_updated_at=true')
+        response = requests.get(f'https://api.coingecko.com/api/v3/simple/price?ids={crypto_id}&vs_currencies={t_currency_id}&include_last_updated_at=true')
         response.raise_for_status()
         data = response.json()
-        exchange_rate = data[crypto][t_currency]
-        last_upd_t = data[crypto]['last_updated_at'] # время последнего обновления
+        exchange_rate = data[crypto_id][t_currency_id]
+        last_upd_t = data[crypto_id]['last_updated_at'] # время последнего обновления
         last_upd = datetime.fromtimestamp(last_upd_t).strftime('%d.%m.%Y')
         result = str(exchange_rate*amount_)
         rate_entry.insert(0,result)
@@ -28,7 +30,7 @@ def get_rate(): #функция получения курса криптовал
 
 
 def update_rate():
-    pass
+    get_rate()
 
 
 def validate_entry(entry):
