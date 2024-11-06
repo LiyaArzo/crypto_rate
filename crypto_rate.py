@@ -27,6 +27,7 @@ def get_rate(): #функция получения курса криптовал
         last_upd_t = data[crypto_id]['last_updated_at'] # время последнего обновления
         last_upd = datetime.fromtimestamp(last_upd_t).strftime('%d.%m.%Y')
         result = str(exchange_rate*amount_)
+        rate_entry.delete(0,END)
         rate_entry.insert(0,result)
         last_upd_lbl.config(text=f'Данные обновлены {last_upd}')
     except Exception as e:
