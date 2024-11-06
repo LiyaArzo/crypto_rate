@@ -98,16 +98,14 @@ def recalc_crypto():
 
 
 def choose_crypto():
-    crypto_choose_win.title('About')
-    crypto_choose_win.geometry('300x150')
     crypto_choose_win.iconify()
-    crypto_choose_win.grab_set()
-    Label(crypto_choose_win, text='Выберите криптовалюту', font='Arial 16 bold').pack(pady=10)
+    crypto_choose_win.focus()
+    choose_lbl.pack(pady=10)
     crypto_combo2.pack(pady=10)
     crypto_combo2.set('BTC (Bitcoin)')
     crypto_combo2.bind('<<ComboboxSelected>>', lambda event: show_info())
-    btn1 = Button(crypto_choose_win,text='Закрыть', command=lambda: exit_win(crypto_choose_win))
     btn1.pack()
+
 
 
 
@@ -116,8 +114,8 @@ def show_info():
     b = crypto_combo2.get()
     print(b)
 
-def exit_win(win):
-    win.destroy()
+def exit_win():
+    crypto_choose_win.withdraw()
 
 
 window = Tk()
@@ -216,8 +214,12 @@ get_rate()
 
 crypto_choose_win = Toplevel() # окно выбора криптовалюты
 crypto_choose_win.withdraw()
+crypto_choose_win.protocol('WM_DELETE_WINDOW', exit_win)
+crypto_choose_win.title('Выбор криптовалюты')
+crypto_choose_win.geometry('300x150+500+300')
+choose_lbl = Label(crypto_choose_win, text='Выберите криптовалюту', font='Arial 16 bold')
 crypto_combo2 = ttk.Combobox(crypto_choose_win, values=list(crypto_names.keys()),
                                 state="readonly", font='Arial 10', justify='center', width=27)
-
+btn1 = Button(crypto_choose_win, text='Закрыть', command=exit_win)
 
 window.mainloop()
