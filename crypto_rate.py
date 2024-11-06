@@ -2,7 +2,6 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox as mb
 from datetime import datetime
-import time
 import requests
 
 
@@ -34,6 +33,19 @@ def validate_entry(entry):
     if e != txt:
         entry.delete(0,END)
         entry.insert(0,txt)
+
+
+def recalc_cur(event):
+    amount = float(crypto_amount.get())
+    currency = amount*exchange_rate
+    rate_entry.delete(0, END)
+    rate_entry.insert(0,str(currency))
+
+def recalc_crypto(event):
+    amount = float(rate_entry.get())
+    crypto = amount/exchange_rate
+    crypto_amount.delete(0, END)
+    crypto_amount.insert(0, f'{crypto:.4f}')
 
 
 window = Tk()
@@ -81,7 +93,7 @@ crypto_amount = ttk.Entry(font='Arial 10', justify='center')
 crypto_amount.insert(0,'1.00')
 crypto_amount.grid(row=1,column=0,ipady=2,padx=10)
 crypto_amount.bind('<KeyRelease>', lambda event:validate_entry(crypto_amount))
-#crypto_amount.bind()
+crypto_amount.bind('<Tab>',recalc_cur)
 
 # Выпадающий список криптовалют
 crypto_combo = ttk.Combobox(values=list(crypto_names.keys()),
@@ -96,6 +108,7 @@ Label(text='Целевая валюта', font='Arial 10 bold').grid(row=2,colum
 rate_entry = ttk.Entry(font='Arial 10', justify='center')
 rate_entry.grid(row=3,column=0,ipady=2,padx=10)
 rate_entry.bind('<KeyRelease>', lambda event:validate_entry(rate_entry))
+rate_entry.bind('<Tab>',recalc_crypto)
 
 # Выпадающий список валют
 currency_combo = ttk.Combobox(values=list(currency_names.keys()),
