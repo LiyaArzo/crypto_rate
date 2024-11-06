@@ -10,18 +10,16 @@ import requests
 def get_rate():
     crypto = crypto_names[crypto_combo.get()]
     t_currency = currency_names[currency_combo.get()]
-    if crypto and t_currency:
-        try:
-            response = requests.get(f'https://api.coingecko.com/api/v3/simple/price?ids={crypto}&vs_currencies={t_currency}&include_last_updated_at=true')
-            response.raise_for_status()
-            data = response.json()
-            exchange_rate = data[crypto][t_currency]
-            last_upd = data[crypto]['last_updated_at']
-            print(exchange_rate, datetime.fromtimestamp(last_upd))
-        except Exception as e:
-            print(f'Возникла ошибка {e}')
-    else:
-        print('Поля не заполнены')
+    try:
+        response = requests.get(f'https://api.coingecko.com/api/v3/simple/price?ids={crypto}&vs_currencies={t_currency}&include_last_updated_at=true')
+        response.raise_for_status()
+        data = response.json()
+        exchange_rate = data[crypto][t_currency]
+        last_upd = data[crypto]['last_updated_at']
+        print(exchange_rate, datetime.fromtimestamp(last_upd))
+    except Exception as e:
+        print(f'Возникла ошибка {e}')
+
 
 
 window = Tk()
@@ -63,12 +61,12 @@ url_list='https://api.coingecko.com/api/v3/coins/list'
 
 
 Label(text='Криптовалюта').pack(padx=10,pady=10)
-crypto_combo = ttk.Combobox(values=list(crypto_names.keys()))
+crypto_combo = ttk.Combobox(values=list(crypto_names.keys()),state="readonly")
 crypto_combo.pack(padx=10,pady=10)
 crypto_combo.set('BTC (Bitcoin)')
 
 Label(text='Целевая валюта').pack(padx=10,pady=10)
-currency_combo = ttk.Combobox(values=list(currency_names.keys()))
+currency_combo = ttk.Combobox(values=list(currency_names.keys()),state="readonly")
 currency_combo.pack(padx=10,pady=10)
 currency_combo.set('USD (Доллар США)')
 
@@ -78,7 +76,7 @@ currency_combo.set('USD (Доллар США)')
 
 
 
-btn = Button(text='Получить курс криптовалюты', command=get_rate)
+btn = ttk.Button(text='Получить курс криптовалюты', command=get_rate)
 btn.pack(padx=10,pady=10)
 
 lbl = Label(text='')
