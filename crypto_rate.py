@@ -37,7 +37,7 @@ def get_rate(): #функция получения курса криптовал
             rate_entry.insert(0,f'{result:.4f}')
             last_upd_lbl.config(text=f'Данные обновлены {last_upd}')
         except Exception as e:
-            mb.showerror('Ошибка', f'Возникла ошибка с соединением {e}')
+            mb.showerror('Ошибка', f'Возникла ошибка {e}')
     else:
         mb.showerror('Ошибка',f'Вы ввели неверное количество {crypto} - {amount_text}')
 
@@ -75,21 +75,21 @@ window.iconbitmap('crypto.ico')
 
 crypto_names = {
     'ADA (Cardano)':['cardano','ADA'],
-    'BBT (BabyBoomToken)': 'babyboomtoken',
-    'BTC (Bitcoin)':'bitcoin',
-    'CETUS (Cetus Protocol)': 'cetus-protocol',
-    'COW (CoW Protocol)':'cow-protocol',
-    'DOGE (Dogecoin)':'dogecoin',
-    'ETH (Ethereum)': 'ethereum',
-    'GRASS': 'grass',
-    'LINK (Chainlink)':'chainlink',
-    'NYM': 'nym',
-    'PNUT (Peanut the Squirrel)': 'peanut-the-squirrel',
-    'TRUMP (MAGA)': 'maga',
-    'TRX (TRON)':'tron',
-    'VISTA (Ethervista)': 'ethervista',
-    'XMR (Monero)':'monero',
-    'XRP (Ripple)':'ripple'
+    'BBT (BabyBoomToken)': ['babyboomtoken','BBT'],
+    'BTC (Bitcoin)':['bitcoin','BTC'],
+    'CETUS (Cetus Protocol)': ['cetus-protocol','CETUS'],
+    'COW (CoW Protocol)':['cow-protocol','COW'],
+    'DOGE (Dogecoin)':['dogecoin','DOGE'],
+    'ETH (Ethereum)': ['ethereum','ETH'],
+    'GRASS': ['grass','GRASS'],
+    'LINK (Chainlink)':['chainlink','LINK'],
+    'NYM': ['nym','NYM'],
+    'PNUT (Peanut the Squirrel)': ['peanut-the-squirrel','PNUT'],
+    'TRUMP (MAGA)': ['maga','TRUMP'],
+    'TRX (TRON)':['tron','TRX'],
+    'VISTA (Ethervista)': ['ethervista','VISTA'],
+    'XMR (Monero)':['monero','XMR'],
+    'XRP (Ripple)':['ripple','XRP']
 }
 
 
