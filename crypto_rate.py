@@ -16,22 +16,30 @@ def get_rate(): #функция получения курса криптовал
     crypto_id = crypto_names[crypto] # id криптовалюты для api
     t_currency_id = currency_names[t_currency] # id валюты для api
     amount_text = crypto_amount.get() # количество криптовалюты
-    try:
-        amount_ = float(amount_text)
-        response = requests.get(f'https://api.coingecko.com/api/v3/simple/price?ids={crypto_id}&vs_currencies={t_currency_id}&include_last_updated_at=true')
-        response.raise_for_status()
-        counter += 1 # если не возникло исключение, счетчик увеличится на 1
-        counter_lbl.config(text=f'Использовано запросов: {counter}')
-        data = response.json()
-        exchange_rate = data[crypto_id][t_currency_id]
-        last_upd_t = data[crypto_id]['last_updated_at'] # время последнего обновления
-        last_upd = datetime.fromtimestamp(last_upd_t).strftime('%d.%m.%Y')
-        result = str(exchange_rate*amount_)
-        rate_entry.delete(0,END)
-        rate_entry.insert(0,result)
-        last_upd_lbl.config(text=f'Данные обновлены {last_upd}')
-    except Exception as e:
-        mb.showerror('Ошибка', f'Возникла ошибка с соединением {e}')
+    if amount_text == '': # если в поле ничего нет, по умолчанию считаем за единицу
+        amount_text = '1.00'
+        crypto_amount.insert(0,amount_text)
+        mb.showwarning('Внимание!','Курс рассчитан за 1 единицу {crypto}')
+    if amount_text.replace('.','',1).isalnum(): # если в поле максимум 1 точка
+        try:
+            amount_ = float(amount_text)
+            response = requests.get(f'https://api.coingecko.com/api/v3/simple/price?ids={crypto_id}&vs_currencies={t_currency_id}&include_last_updated_at=true')
+            response.raise_for_status()
+            counter += 1 # если не возникло исключение, счетчик увеличится на 1
+            counter_lbl.config(text=f'Использовано запросов: {counter}')
+            data = response.json()
+            exchange_rate = data[crypto_id][t_currency_id]
+            last_upd_t = data[crypto_id]['last_updated_at'] # время последнего обновления
+            last_upd = datetime.fromtimestamp(last_upd_t).strftime('%d.%m.%Y')
+            result = str(exchange_rate*amount_)
+            rate_entry.delete(0,END)
+            rate_entry.insert(0,result)
+            last_upd_lbl.config(text=f'Данные обновлены {last_upd}')
+        except Exception as e:
+            mb.showerror('Ошибка', f'Возникла ошибка с соединением {e}')
+    else:
+        mb.showerror('Ошибка','Вы ввели больше 1 точки')
+
 
 
 def update_rate():
