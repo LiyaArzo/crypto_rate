@@ -17,20 +17,21 @@ def get_rate():
         response.raise_for_status()
         data = response.json()
         exchange_rate = data[crypto][t_currency]
-        last_upd = data[crypto]['last_updated_at']
-        print(exchange_rate*amount_, datetime.fromtimestamp(last_upd))
+        last_upd_t = data[crypto]['last_updated_at']
+        last_upd = datetime.fromtimestamp(last_upd_t).strftime('%d.%m.%Y')
         result = str(exchange_rate*amount_)
-        rate_lbl.config(text=result)
+        rate_entry.insert(0,result)
+        last_upd_lbl.config(text=f'Данные обновлены {last_upd}')
     except Exception as e:
         print(f'Возникла ошибка {e}')
 
 
-def validate_entry():
-    e = crypto_amount.get()
+def validate_entry(entry):
+    e = entry.get()
     txt = ''.join(b for b in e if b in '0123456789.')
     if e != txt:
-        crypto_amount.delete(0,END)
-        crypto_amount.insert(0,txt)
+        entry.delete(0,END)
+        entry.insert(0,txt)
 
 
 window = Tk()
@@ -76,7 +77,7 @@ Label(text='Криптовалюта',font='Arial 16 bold').grid(row=0,column=0,
 crypto_amount = ttk.Entry(font='Arial 10', justify='center')
 crypto_amount.insert(0,'1.00')
 crypto_amount.grid(row=1,column=0,ipady=2,padx=10)
-crypto_amount.bind('<KeyRelease>', lambda event:validate_entry())
+crypto_amount.bind('<KeyRelease>', lambda event:validate_entry(crypto_amount))
 
 crypto_combo = ttk.Combobox(values=list(crypto_names.keys()),
                             state="readonly",font='Arial 10', justify='center', width=27)
@@ -85,19 +86,21 @@ crypto_combo.set('BTC (Bitcoin)')
 
 Label(text='Целевая валюта', font='Arial 10 bold').grid(row=2,column=0,columnspan=2,sticky='ew',ipady=10)
 
-rate_lbl = Label(text='',font='Arial 10', justify='center')
-rate_lbl.grid(row=3,column=0,ipady=2,padx=10)
+rate_entry = ttk.Entry(font='Arial 10', justify='center')
+rate_entry.grid(row=3,column=0,ipady=2,padx=10)
+rate_entry.bind('<KeyRelease>', lambda event:validate_entry(rate_entry))
 
 currency_combo = ttk.Combobox(values=list(currency_names.keys()),
                               state="readonly", font='Arial 10', justify='center', width=27)
 currency_combo.grid(row=3,column=1, ipady=2)
 currency_combo.set('USD (Доллар США)')
 
-#crypto_combo.bind('<<ComboboxSelected>>',update_b_label)
-
-btn = ttk.Button(text='Получить курс криптовалюты', command=get_rate)
+btn = ttk.Button(text='Обновить', command=get_rate)
 btn.grid(row=4,column=0,columnspan=2,pady=20)
 
-get_rate()
+last_upd_lbl = Label(text='',font='Arial 10')
+last_upd_lbl.grid(row=5,column=0,columnspan=2,pady=20)
+
+#get_rate()
 
 window.mainloop()
