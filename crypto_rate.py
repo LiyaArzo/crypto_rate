@@ -12,6 +12,7 @@ exchange_rate = None # переменная для курса выбранной
 counter = 0 # счетчик для количества запросов к api
 crypto_dict_file = 'crypto_dict.json' # файл для хранения библиотеки криптовалют
 crypto_names = {}
+coins_list_url = 'https://api.coingecko.com/api/v3/coins/list'
 
 
 def get_crypto_dict(): # считываем из файла библиотеку с сокращенными и полными названиями криптовалют и их id для api
@@ -177,6 +178,46 @@ def show_info():
         mb.showerror('Ошибка', f'Возникла ошибка с соединением: {e}')
 
 
+def add_crypto():
+    global crypto_names
+    found_cryptos = {}
+    cryptos_id = [crypto_id for key, [crypto_id,name1] in crypto_names.items()] # список id криптовалют библиотеки crypto_names
+    new_crypto = sd.askstring('Добавление', 'Введите полное или сокращённое название криптовалюты,\nнапример, "Bitcoin" или "BTC"').strip().lower()
+    if new_crypto:
+        try:
+            response = requests.get(coins_list_url)
+            response.raise_for_status()
+            data = response.json()
+            for coin in data:
+                if new_crypto in [coin['id'].lower(),coin['symbol'].lower(),coin['name'].lower()] and coin['id'] not in cryptos_id:
+                    if coin['symbol'].lower() != coin['name'].lower():
+                        name = f'{coin['symbol'].upper()} ({coin['name']})'
+                    else:
+                        name = coin['symbol'].upper()
+                    found_cryptos[name] = [coin['id'], coin['symbol'].upper()]
+            if len(found_cryptos) == 1:
+                answer = mb.askyesno('Добавить?',f'Найдена новая криптовалюта "{name}", добавить?')
+                if answer:
+                    crypto_names.update(found_cryptos) # добавить данные о новой криптовалюте в словарь
+                    update_crypto_dict_f() # обновить файл json
+                    crypto_combo.config(values=list(crypto_names.keys())) # обновить выпадающий список с криптовалютами
+                else:
+                    return
+            elif len(found_cryptos) == 0:
+                mb.showerror('Ошибка',f'Криптовалюта "{new_crypto}" не найдена или уже добавлена, обратитесь к списку криптовалют')
+            else:
+                mb.showwarning('Внимание',f'Найдено несколько ({len(found_cryptos)}) криптовалют:\n\n{', '.join([name for name in found_cryptos.keys()])},\n\n уточните название')
+
+        except Exception as e:
+            mb.showerror('Ошибка',f'Произошла ошибка {e}')
+    else:
+        mb.showerror('Ошибка добавления','Название криптовалюты не введено')
+
+
+def update_crypto_dict_f(): # функция обновления файла json
+     with open(crypto_dict_file,'w') as f:
+        json.dump(crypto_names, f, indent=4)
+
 
 def exit_win():
     crypto_choose_win.withdraw()
@@ -192,6 +233,7 @@ window.config(menu=mainmenu)
 filemenu = Menu(mainmenu, tearoff=0)
 mainmenu.add_cascade(label="Криптовалюта", menu=filemenu)
 filemenu.add_command(label="Инфо", command=choose_crypto)
+filemenu.add_command(label="Добавить", command=add_crypto)
 
 
 
@@ -208,10 +250,9 @@ currency_names = {
 
 get_crypto_dict() # Получить из файла json библиотеку имён криптовалют
 
-#with open(crypto_dict_file,'w') as f:
-#    json.dump(crypto_names, f, indent=4)
 
-url_list='https://api.coingecko.com/api/v3/coins/list'
+
+
 
 
 Label(text='Криптовалюта',font='Arial 16 bold').grid(row=0,column=0,columnspan=2,sticky='ew',ipady=10)
