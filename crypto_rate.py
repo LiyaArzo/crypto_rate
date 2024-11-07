@@ -234,8 +234,8 @@ def update_crypto_dict_f(): # функция обновления файла jso
 def save_rate(): # функция сохранения курса криптовалюты
     rate = crypto_cur_lbl['text']
     last_update = last_upd_lbl['text']
-    res = f'{rate[19:]} ({last_update[18:28]} {last_update[-5:]})'
-    answer = mb.askyesno('Сохранение курса',f'"{res}"\n\n - сохранить данные?')
+    res = f'\n{rate[19:]} ({last_update[18:28]} {last_update[-5:]})'
+    answer = mb.askyesno('Сохранение курса',f'{res}\n\n - сохранить данные?')
     if answer:
         with open(crypto_rates_file,'a+', encoding='utf-8') as f:
             f.write(res)
@@ -243,6 +243,25 @@ def save_rate(): # функция сохранения курса криптов
     else:
         mb.showwarning('Внимание','Данные не сохранены')
 
+
+def show_history(): # Функция отображения сохраненных курсов криптовалют
+    if not os.path.exists(crypto_rates_file):
+        mb.showerror('Ошибка', 'Нет сохранённых данных')
+        return
+    history_window = Toplevel()
+    history_window.title('Сохраненные курсы криптовалюты')
+    history_window.geometry('500x300')
+    history_text = Text(history_window, width=59, height=18)
+    history_text.pack(side=LEFT)
+    scroll = Scrollbar(history_window, command=history_text.yview)
+    scroll.pack(side=LEFT, fill=Y)
+    history_text.config(yscrollcommand=scroll.set)
+    with open(crypto_rates_file, 'r', encoding='utf-8') as f:
+        history = f.read()
+        for item in history:
+            res_text = item
+            history_text.insert(END, res_text)
+    history_text.config(state='disabled')
 
 
 
@@ -268,6 +287,7 @@ window.config(menu=mainmenu)
 filemenu = Menu(mainmenu, tearoff=0)
 mainmenu.add_cascade(label="Файл", menu=filemenu)
 filemenu.add_command(label="Сохранить курс", command=save_rate)
+filemenu.add_command(label="История сохранений", command=show_history)
 filemenu.add_separator()
 filemenu.add_command(label="Закрыть", command=exit)
 
