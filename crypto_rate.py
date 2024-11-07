@@ -138,7 +138,7 @@ def choose_crypto():
     crypto_combo2.pack(pady=10)
     crypto_combo2.set('BTC (Bitcoin)')
     crypto_combo2.bind('<<ComboboxSelected>>', lambda event: show_info())
-    btn1 = Button(crypto_choose_win, text='Закрыть', command=hide_win)
+    btn1 = Button(crypto_choose_win, text='Показать инфо', font='Arial 10', command=show_info)
     btn1.pack()
 
 
