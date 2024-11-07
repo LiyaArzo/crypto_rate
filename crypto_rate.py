@@ -10,9 +10,17 @@ import os
 
 exchange_rate = None # переменная для курса выбранной криптовалюты
 counter = 0 # счетчик для количества запросов к api
+coins_list_url = 'https://api.coingecko.com/api/v3/coins/list'
 crypto_dict_file = 'crypto_dict.json' # файл для хранения библиотеки криптовалют
 crypto_names = {}
-coins_list_url = 'https://api.coingecko.com/api/v3/coins/list'
+currency_names = {
+    'CNY (Китайский юань)': 'cny',
+    'EUR (Евро)': 'eur',
+    'JPY (Японская йена)': 'jpy',
+    'KRW (Южнокорейская вона': 'krw',
+    'RUB (Российский рубль)': 'rub',
+    'USD (Доллар США)': 'usd'
+}
 
 
 def get_crypto_dict(): # считываем из файла библиотеку с сокращенными и полными названиями криптовалют и их id для api
@@ -226,6 +234,10 @@ def exit_win():
     crypto_choose_win.withdraw()
 
 
+def exit():
+    window.withdraw()
+
+
 window = Tk()
 window.title('Конвертер криптовалют')
 window.geometry('400x420')
@@ -233,11 +245,13 @@ window.iconbitmap(default='crypto.ico')
 
 mainmenu = Menu(window)
 window.config(menu=mainmenu)
+
 filemenu = Menu(mainmenu, tearoff=0)
 mainmenu.add_cascade(label="Файл", menu=filemenu)
 filemenu.add_command(label="Сохранить", command=choose_crypto)
 filemenu.add_separator()
-filemenu.add_command(label="Закрыть", command=choose_crypto)
+filemenu.add_command(label="Закрыть", command=exit)
+
 cryptomenu = Menu(mainmenu, tearoff=0)
 mainmenu.add_cascade(label="Криптовалюты", menu=cryptomenu)
 cryptomenu.add_command(label="Добавить", command=add_crypto)
@@ -249,14 +263,7 @@ cryptomenu.add_command(label="Список", command=add_crypto)
 
 
 
-currency_names = {
-    'CNY (Китайский юань)': 'cny',
-    'EUR (Евро)': 'eur',
-    'JPY (Японская йена)': 'jpy',
-    'KRW (Южнокорейская вона': 'krw',
-    'RUB (Российский рубль)': 'rub',
-    'USD (Доллар США)': 'usd'
-}
+
 
 get_crypto_dict() # Получить из файла json библиотеку имён криптовалют
 
