@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox as mb
 from tkinter import simpledialog as sd
 from datetime import datetime
+import pandas as pd
 import requests
 import json
 import os
@@ -13,6 +14,7 @@ counter = 0 # счетчик для количества запросов к api
 coins_list_url = 'https://api.coingecko.com/api/v3/coins/list' # список всех криптовалют coingecko
 crypto_rates_file = 'crypto_rates.txt' # файл для сохранения курсов валют
 crypto_dict_file = 'crypto_dict.json' # файл для хранения библиотеки криптовалют
+crypto_list_file = 'crypto_list.xlsx' # файл для сохранения списка криптовалют
 crypto_names = {}
 currency_names = {
     'CNY (Китайский юань)': 'cny',
@@ -264,8 +266,13 @@ def show_history(): # Функция отображения сохраненны
     history_text.config(state='disabled')
 
 
-def save_crypto_list():
+def save_crypto_list(): # Функция сохранения полного списка криптовалют в файл
     global counter
+    coin_names, coin_symbols = [], []
+    if os.path.exists(crypto_list_file):
+        answer = mb.askyesno('Файл уже существует','Перезаписать?')
+        if not answer:
+            return
     try:
         response = requests.get(coins_list_url)
         response.raise_for_status()
@@ -273,10 +280,14 @@ def save_crypto_list():
         counter_lbl.config(text=f'Использовано запросов: {counter}')
         data = response.json()
         for coin in data:
-            symbol = coin['symbol']
-            name = coin['name']
-
-
+            coin_symbols.append(coin['symbol'])
+            coin_names.append(coin['name'])
+        df = pd.DataFrame({
+            'Сокращение': coin_symbols,
+            'Наименование': coin_names
+        })
+        df.to_excel(crypto_list_file)
+        mb.showinfo('Успех','Список криптовалют сохранён')
     except Exception as e:
         mb.showerror('Ошибка', f'Произошла ошибка {e}')
 
