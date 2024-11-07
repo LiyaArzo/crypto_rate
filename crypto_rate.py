@@ -234,9 +234,16 @@ window.iconbitmap(default='crypto.ico')
 mainmenu = Menu(window)
 window.config(menu=mainmenu)
 filemenu = Menu(mainmenu, tearoff=0)
-mainmenu.add_cascade(label="Криптовалюта", menu=filemenu)
-filemenu.add_command(label="Инфо", command=choose_crypto)
-filemenu.add_command(label="Добавить", command=add_crypto)
+mainmenu.add_cascade(label="Файл", menu=filemenu)
+filemenu.add_command(label="Сохранить", command=choose_crypto)
+filemenu.add_separator()
+filemenu.add_command(label="Закрыть", command=choose_crypto)
+cryptomenu = Menu(mainmenu, tearoff=0)
+mainmenu.add_cascade(label="Криптовалюты", menu=cryptomenu)
+cryptomenu.add_command(label="Добавить", command=add_crypto)
+cryptomenu.add_command(label="Инфо", command=choose_crypto)
+cryptomenu.add_command(label="Список", command=add_crypto)
+
 
 
 
