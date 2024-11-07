@@ -10,7 +10,8 @@ import os
 
 exchange_rate = None # переменная для курса выбранной криптовалюты
 counter = 0 # счетчик для количества запросов к api
-coins_list_url = 'https://api.coingecko.com/api/v3/coins/list'
+coins_list_url = 'https://api.coingecko.com/api/v3/coins/list' # список всех криптовалют coingecko
+crypto_rates_file = 'crypto_rates.txt' # файл для сохранения курсов валют
 crypto_dict_file = 'crypto_dict.json' # файл для хранения библиотеки криптовалют
 crypto_names = {}
 currency_names = {
@@ -230,6 +231,22 @@ def update_crypto_dict_f(): # функция обновления файла jso
         json.dump(crypto_names, f, indent=4)
 
 
+def save_rate(): # функция сохранения курса криптовалюты
+    rate = crypto_cur_lbl['text']
+    last_update = last_upd_lbl['text']
+    res = f'{rate[19:]} ({last_update[18:28]} {last_update[-5:]})'
+    answer = mb.askyesno('Сохранение курса',f'"{res}"\n\n - сохранить данные?')
+    if answer:
+        with open(crypto_rates_file,'a+', encoding='utf-8') as f:
+            f.write(res)
+        mb.showinfo('Успешно', 'Данные успешно сохранены')
+    else:
+        mb.showwarning('Внимание','Данные не сохранены')
+
+
+
+
+
 def hide_win(): # функция сокрытия дочернего окна
     crypto_choose_win.withdraw()
 
@@ -250,7 +267,7 @@ window.config(menu=mainmenu)
 
 filemenu = Menu(mainmenu, tearoff=0)
 mainmenu.add_cascade(label="Файл", menu=filemenu)
-filemenu.add_command(label="Сохранить", command=choose_crypto) #!
+filemenu.add_command(label="Сохранить курс", command=save_rate)
 filemenu.add_separator()
 filemenu.add_command(label="Закрыть", command=exit)
 
