@@ -110,16 +110,72 @@ def choose_crypto():
 
 
 def show_info():
+    global counter
+    show_win = Toplevel()
+    show_win.title('Информация о криптовалюте')
+    crypto_name = crypto_combo2.get()
+    name_lbl = Label(show_win,text=f'Название криптовалюты: {crypto_name}')
+    name_lbl.pack()
+    code_lbl = Label(show_win, text=f'Сокращённое название: {crypto_names[crypto_name][1]}')
+    code_lbl.pack()
+    cur_usd = Label(show_win, text='Текущий курс:')
+    cur_usd.pack()
+    max_usd_lbl = Label(show_win, text='Максимальная стоимость:')
+    max_usd_lbl.pack()
+    min_usd_lbl = Label(show_win, text='Минимальная стоимость:')
+    min_usd_lbl.pack()
+    high_day = Label(show_win, text='Максимальная стоимость за день:')
+    high_day.pack()
+    low_day = Label(show_win, text='Минимальная стоимость за день:')
+    low_day.pack()
+    perc_day_l = Label(show_win, text='За день')
+    perc_day_l.pack()
+    market = Label(show_win, text='Вы можете купить криптовалюте на рынке ')
+    market.pack()
+    amount_now = Label(show_win, text='Сейчас в обращении:  ')
+    amount_now.pack()
+    max_amount = Label(show_win, text='Максимально возможное количество:  ')
+    max_amount.pack()
+    try:
+        response = requests.get(f'https://api.coingecko.com/api/v3/coins/{crypto_names[crypto_name][0]}')
+        response.raise_for_status()
+        counter += 1  # если не возникло исключение, счетчик увеличится на 1
+        counter_lbl.config(text=f'Использовано запросов: {counter}')
+        data = response.json()
+        cur_usd.config(text=f'Текущий курс: ${float(data['market_data']['current_price']['usd']):.2f}')
+        max_y,max_m,max_d = data['market_data']['ath_date']['usd'][:10].split('-')
+        max_usd_lbl.config(text=f'Максимальная стоимость: ${float(data['market_data']['ath']['usd']):.2f} ({max_d}.{max_m}.{max_y})')
+        min_y, min_m, min_d = data['market_data']['atl_date']['usd'][:10].split('-')
+        min_usd_lbl.config(text=f'Минимальная стоимость: ${float(data['market_data']['atl']['usd']):.2f} ({min_d}.{min_m}.{min_y})')
+        high_day.config(text=f'Максимальная стоимость за день: ${float(data['market_data']['high_24h']['usd']):.2f}')
+        low_day.config(text=f'Минимальная стоимость за день: ${float(data['market_data']['low_24h']['usd']):.2f}')
+        perc_day = float(data['market_data']['price_change_percentage_24h_in_currency']['usd'])
+        res = 'выросла' if perc_day > 0 else 'уменьшилась' if perc_day < 0 else 'осталась неизменной'
+        perc_day_l.config(text=f'За день стоимость криптовалюты в USD {res} на {perc_day:.2f}%')
+        perc_month = data['market_data']['price_change_percentage_30d_in_currency']['usd']
+        perc_year = data['market_data']['price_change_percentage_1y_in_currency']['usd']
 
-    b = crypto_combo2.get()
-    print(b)
+        amount_now.config(text=f'Сейчас в обращении: {data['market_data']['circulating_supply']} ')
+        max_amount.config(text=f'Максимально возможное количество: {data['market_data']['max_supply']} ')
+        market.config(text=f'Вы можете купить криптовалюту на рынке "{data['tickers'][0]['market']['name']}"')
+
+        # data['image']['thumb'] - ссылка на картинку
+
+
+
+
+
+    except Exception as e:
+        mb.showerror('Ошибка', f'Возникла ошибка с соединением: {e}')
+
+
 
 def exit_win():
     crypto_choose_win.withdraw()
 
 
 window = Tk()
-window.title('Курсы криптовалют')
+window.title('Конвертер криптовалют')
 window.geometry('400x420')
 window.iconbitmap(default='crypto.ico')
 
@@ -212,7 +268,7 @@ counter_lbl.grid(row=7,column=0,columnspan=2,pady=20)
 
 get_rate()
 
-crypto_choose_win = Toplevel() # окно выбора криптовалюты
+crypto_choose_win = Toplevel(window) # окно выбора криптовалюты
 crypto_choose_win.withdraw()
 crypto_choose_win.protocol('WM_DELETE_WINDOW', exit_win)
 crypto_choose_win.title('Выбор криптовалюты')
