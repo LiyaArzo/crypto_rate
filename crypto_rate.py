@@ -180,13 +180,17 @@ def show_info():
 
 def add_crypto():
     global crypto_names
+    global counter
     found_cryptos = {}
     cryptos_id = [crypto_id for key, [crypto_id,name1] in crypto_names.items()] # список id криптовалют библиотеки crypto_names
-    new_crypto = sd.askstring('Добавление', 'Введите полное или сокращённое название криптовалюты,\nнапример, "Bitcoin" или "BTC"').strip().lower()
+    new_crypto = sd.askstring('Добавление', 'Введите полное или сокращённое название криптовалюты,\nнапример, "Bitcoin" или "BTC"')
     if new_crypto:
+        new_crypto = new_crypto.strip().lower()
         try:
             response = requests.get(coins_list_url)
             response.raise_for_status()
+            counter += 1
+            counter_lbl.config(text=f'Использовано запросов: {counter}')
             data = response.json()
             for coin in data:
                 if new_crypto in [coin['id'].lower(),coin['symbol'].lower(),coin['name'].lower()] and coin['id'] not in cryptos_id:
@@ -206,8 +210,7 @@ def add_crypto():
             elif len(found_cryptos) == 0:
                 mb.showerror('Ошибка',f'Криптовалюта "{new_crypto}" не найдена или уже добавлена, обратитесь к списку криптовалют')
             else:
-                mb.showwarning('Внимание',f'Найдено несколько ({len(found_cryptos)}) криптовалют:\n\n{', '.join([name for name in found_cryptos.keys()])},\n\n уточните название')
-
+                mb.showwarning('Внимание',f'Найдено несколько ({len(found_cryptos)}) криптовалют\n\n "Сокращение (Полное_название)":\n{'\n'.join([name for name in found_cryptos.keys()])},\n\n уточните название')
         except Exception as e:
             mb.showerror('Ошибка',f'Произошла ошибка {e}')
     else:
