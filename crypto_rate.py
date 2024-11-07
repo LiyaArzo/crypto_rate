@@ -10,6 +10,8 @@ import os
 
 
 exchange_rate = None # переменная для курса выбранной криптовалюты
+crypto_combo2 = None
+crypto_choose_win = None
 counter = 0 # счетчик для количества запросов к api
 coins_list_url = 'https://api.coingecko.com/api/v3/coins/list' # список всех криптовалют coingecko
 crypto_rates_file = 'crypto_rates.txt' # файл для сохранения курсов валют
@@ -122,13 +124,23 @@ def recalc_crypto():
 
 
 def choose_crypto():
-    crypto_choose_win.iconify()
-    crypto_choose_win.focus()
+    global crypto_combo2
+    global crypto_choose_win
+    crypto_choose_win = Toplevel(window)  # окно выбора криптовалюты
+    crypto_choose_win.protocol('WM_DELETE_WINDOW',
+                               hide_win)  # при нажатии на крестик, окно не закрывается, а скрывается
+    crypto_choose_win.title('Выбор криптовалюты')
+    crypto_choose_win.geometry('300x150+500+300')
+    choose_lbl = Label(crypto_choose_win, text='Выберите криптовалюту', font='Arial 16 bold')
     choose_lbl.pack(pady=10)
+    crypto_combo2 = ttk.Combobox(crypto_choose_win, values=list(crypto_names.keys()),
+                                 state="readonly", font='Arial 10', justify='center', width=27)
     crypto_combo2.pack(pady=10)
     crypto_combo2.set('BTC (Bitcoin)')
     crypto_combo2.bind('<<ComboboxSelected>>', lambda event: show_info())
+    btn1 = Button(crypto_choose_win, text='Закрыть', command=hide_win)
     btn1.pack()
+
 
 
 
@@ -304,7 +316,7 @@ get_crypto_dict() # Получить из файла json библиотеку �
 
 window = Tk()
 window.title('Конвертер криптовалют')
-window.geometry('400x420')
+window.geometry('400x380')
 window.iconbitmap(default='crypto.ico')
 
 mainmenu = Menu(window)
@@ -359,30 +371,22 @@ btn = ttk.Button(text='Обновить', command=update_rate)
 btn.grid(row=4,column=0,columnspan=2,pady=20)
 
 # Метка для отображения информации о курсе криптовалюты
-crypto_cur_lbl = Label(text='',font='Arial 10')
-crypto_cur_lbl.grid(row=5,column=0,columnspan=2,pady=20)
+crypto_cur_lbl = Label(text='',font='Arial 10 bold')
+crypto_cur_lbl.grid(row=5,column=0,columnspan=2,pady=(20,0))
 
 # Метка для отображения времени последнего обновления данных о курсе валюты
 last_upd_lbl = Label(text='',font='Arial 10')
-last_upd_lbl.grid(row=6,column=0,columnspan=2,pady=20)
+last_upd_lbl.grid(row=6,column=0,columnspan=2,pady=(10,20))
 
 # Метка для отображения счетчика
-counter_lbl = Label(text='',font='Arial 10')
-counter_lbl.grid(row=7,column=0,columnspan=2,pady=20)
+counter_lbl = Label(text='',font='Arial 10 italic', fg='orchid4')
+counter_lbl.grid(row=7,column=0,columnspan=2,pady=(20,10))
 
 if crypto_names:
     get_rate() # отобразить на экране значение курса криптовалюты, по умолчанию Биткоин к доллару США
 else:
     crypto_cur_lbl.config(text='Ошибка получения данных!')
 
-crypto_choose_win = Toplevel(window) # окно выбора криптовалюты
-crypto_choose_win.withdraw()
-crypto_choose_win.protocol('WM_DELETE_WINDOW', hide_win) # при нажатии на крестик, окно не закрывается, а скрывается
-crypto_choose_win.title('Выбор криптовалюты')
-crypto_choose_win.geometry('300x150+500+300')
-choose_lbl = Label(crypto_choose_win, text='Выберите криптовалюту', font='Arial 16 bold')
-crypto_combo2 = ttk.Combobox(crypto_choose_win, values=list(crypto_names.keys()),
-                                state="readonly", font='Arial 10', justify='center', width=27)
-btn1 = Button(crypto_choose_win, text='Закрыть', command=hide_win)
+
 
 window.mainloop()
