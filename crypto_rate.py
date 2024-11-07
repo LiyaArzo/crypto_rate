@@ -142,11 +142,9 @@ def choose_crypto():
     btn1.pack()
 
 
-
-
-
 def show_info():
     global counter
+    hide_win()
     show_win = Toplevel()
     show_win.title('Информация о криптовалюте')
     crypto_name = crypto_combo2.get()
