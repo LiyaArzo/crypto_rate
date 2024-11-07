@@ -264,6 +264,21 @@ def show_history(): # Функция отображения сохраненны
     history_text.config(state='disabled')
 
 
+def save_crypto_list():
+    global counter
+    try:
+        response = requests.get(coins_list_url)
+        response.raise_for_status()
+        counter += 1
+        counter_lbl.config(text=f'Использовано запросов: {counter}')
+        data = response.json()
+        for coin in data:
+            symbol = coin['symbol']
+            name = coin['name']
+
+
+    except Exception as e:
+        mb.showerror('Ошибка', f'Произошла ошибка {e}')
 
 
 def hide_win(): # функция сокрытия дочернего окна
@@ -293,9 +308,9 @@ filemenu.add_command(label="Закрыть", command=exit)
 
 cryptomenu = Menu(mainmenu, tearoff=0)
 mainmenu.add_cascade(label="Криптовалюты", menu=cryptomenu)
-cryptomenu.add_command(label="Добавить", command=add_crypto)
-cryptomenu.add_command(label="Инфо", command=choose_crypto)
-cryptomenu.add_command(label="Список", command=add_crypto) #!
+cryptomenu.add_command(label="Добавить новую криптовалюту", command=add_crypto)
+cryptomenu.add_command(label="Инфо о криптовалюте", command=choose_crypto)
+cryptomenu.add_command(label="Скачать список криптовалют", command=save_crypto_list)
 
 Label(text='Криптовалюта',font='Arial 14 bold').grid(row=0,column=0,columnspan=2,sticky='ew',ipady=10)
 
