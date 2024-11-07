@@ -235,8 +235,10 @@ def exit_win():
 
 
 def exit():
-    window.withdraw()
+    window.destroy()
 
+
+get_crypto_dict() # Получить из файла json библиотеку имён криптовалют
 
 window = Tk()
 window.title('Конвертер криптовалют')
@@ -248,7 +250,7 @@ window.config(menu=mainmenu)
 
 filemenu = Menu(mainmenu, tearoff=0)
 mainmenu.add_cascade(label="Файл", menu=filemenu)
-filemenu.add_command(label="Сохранить", command=choose_crypto)
+filemenu.add_command(label="Сохранить", command=choose_crypto) #!
 filemenu.add_separator()
 filemenu.add_command(label="Закрыть", command=exit)
 
@@ -256,23 +258,9 @@ cryptomenu = Menu(mainmenu, tearoff=0)
 mainmenu.add_cascade(label="Криптовалюты", menu=cryptomenu)
 cryptomenu.add_command(label="Добавить", command=add_crypto)
 cryptomenu.add_command(label="Инфо", command=choose_crypto)
-cryptomenu.add_command(label="Список", command=add_crypto)
+cryptomenu.add_command(label="Список", command=add_crypto) #!
 
-
-
-
-
-
-
-
-get_crypto_dict() # Получить из файла json библиотеку имён криптовалют
-
-
-
-
-
-
-Label(text='Криптовалюта',font='Arial 16 bold').grid(row=0,column=0,columnspan=2,sticky='ew',ipady=10)
+Label(text='Криптовалюта',font='Arial 14 bold').grid(row=0,column=0,columnspan=2,sticky='ew',ipady=10)
 
 # Поле ввода количества криптовалюты, по умолчанию 1.00
 crypto_amount = ttk.Entry(font='Arial 10', justify='center')
@@ -288,7 +276,7 @@ crypto_combo.grid(row=1,column=1, ipady=2)
 crypto_combo.set('BTC (Bitcoin)')
 crypto_combo.bind('<<ComboboxSelected>>',lambda event:get_rate())
 
-Label(text='Целевая валюта', font='Arial 10 bold').grid(row=2,column=0,columnspan=2,sticky='ew',ipady=10)
+Label(text='Целевая валюта', font='Arial 14 bold').grid(row=2,column=0,columnspan=2,sticky='ew',ipady=10)
 
 # Поле для отображения стоимости криптовалюты в выбранной валюте, а также для ввода количества валюты
 rate_entry = ttk.Entry(font='Arial 10', justify='center')
