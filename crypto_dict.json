@@ -1,0 +1,66 @@
+{
+    "ADA (Cardano)": [
+        "cardano",
+        "ADA"
+    ],
+    "BBT (BabyBoomToken)": [
+        "babyboomtoken",
+        "BBT"
+    ],
+    "BTC (Bitcoin)": [
+        "bitcoin",
+        "BTC"
+    ],
+    "CETUS (Cetus Protocol)": [
+        "cetus-protocol",
+        "CETUS"
+    ],
+    "COW (CoW Protocol)": [
+        "cow-protocol",
+        "COW"
+    ],
+    "DOGE (Dogecoin)": [
+        "dogecoin",
+        "DOGE"
+    ],
+    "ETH (Ethereum)": [
+        "ethereum",
+        "ETH"
+    ],
+    "GRASS": [
+        "grass",
+        "GRASS"
+    ],
+    "LINK (Chainlink)": [
+        "chainlink",
+        "LINK"
+    ],
+    "NYM": [
+        "nym",
+        "NYM"
+    ],
+    "PNUT (Peanut the Squirrel)": [
+        "peanut-the-squirrel",
+        "PNUT"
+    ],
+    "TRUMP (MAGA)": [
+        "maga",
+        "TRUMP"
+    ],
+    "TRX (TRON)": [
+        "tron",
+        "TRX"
+    ],
+    "VISTA (Ethervista)": [
+        "ethervista",
+        "VISTA"
+    ],
+    "XMR (Monero)": [
+        "monero",
+        "XMR"
+    ],
+    "XRP (Ripple)": [
+        "ripple",
+        "XRP"
+    ]
+}

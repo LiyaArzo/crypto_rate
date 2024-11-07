@@ -4,11 +4,23 @@ from tkinter import messagebox as mb
 from tkinter import simpledialog as sd
 from datetime import datetime
 import requests
+import json
+import os
 
 
 exchange_rate = None # переменная для курса выбранной криптовалюты
 counter = 0 # счетчик для количества запросов к api
+crypto_dict_file = 'crypto_dict.json' # файл для хранения библиотеки криптовалют
+crypto_names = {}
 
+
+def get_crypto_dict(): # считываем из файла библиотеку с сокращенными и полными названиями криптовалют и их id для api
+    global crypto_names
+    if os.path.exists(crypto_dict_file):
+        with open(crypto_dict_file,'r') as f:
+            crypto_names = json.load(f)
+    else:
+        mb.showerror('Ошибка!','Проблема с библиотекой криптовалют,\nобратитесь к администратору')
 
 
 def get_rate(): #функция получения курса криптовалют
@@ -161,10 +173,6 @@ def show_info():
 
         # data['image']['thumb'] - ссылка на картинку
 
-
-
-
-
     except Exception as e:
         mb.showerror('Ошибка', f'Возникла ошибка с соединением: {e}')
 
@@ -187,24 +195,7 @@ filemenu.add_command(label="Инфо", command=choose_crypto)
 
 
 
-crypto_names = {
-    'ADA (Cardano)':['cardano','ADA'],
-    'BBT (BabyBoomToken)': ['babyboomtoken','BBT'],
-    'BTC (Bitcoin)':['bitcoin','BTC'],
-    'CETUS (Cetus Protocol)': ['cetus-protocol','CETUS'],
-    'COW (CoW Protocol)':['cow-protocol','COW'],
-    'DOGE (Dogecoin)':['dogecoin','DOGE'],
-    'ETH (Ethereum)': ['ethereum','ETH'],
-    'GRASS': ['grass','GRASS'],
-    'LINK (Chainlink)':['chainlink','LINK'],
-    'NYM': ['nym','NYM'],
-    'PNUT (Peanut the Squirrel)': ['peanut-the-squirrel','PNUT'],
-    'TRUMP (MAGA)': ['maga','TRUMP'],
-    'TRX (TRON)':['tron','TRX'],
-    'VISTA (Ethervista)': ['ethervista','VISTA'],
-    'XMR (Monero)':['monero','XMR'],
-    'XRP (Ripple)':['ripple','XRP']
-}
+
 
 currency_names = {
     'CNY (Китайский юань)': 'cny',
@@ -215,6 +206,10 @@ currency_names = {
     'USD (Доллар США)': 'usd'
 }
 
+get_crypto_dict() # Получить из файла json библиотеку имён криптовалют
+
+#with open(crypto_dict_file,'w') as f:
+#    json.dump(crypto_names, f, indent=4)
 
 url_list='https://api.coingecko.com/api/v3/coins/list'
 
@@ -266,7 +261,10 @@ last_upd_lbl.grid(row=6,column=0,columnspan=2,pady=20)
 counter_lbl = Label(text='',font='Arial 10')
 counter_lbl.grid(row=7,column=0,columnspan=2,pady=20)
 
-get_rate()
+if crypto_names:
+    get_rate() # отобразить на экране значение курса криптовалюты, по умолчанию Биткоин к доллару США
+else:
+    crypto_cur_lbl.config(text='Ошибка получения данных!')
 
 crypto_choose_win = Toplevel(window) # окно выбора криптовалюты
 crypto_choose_win.withdraw()
