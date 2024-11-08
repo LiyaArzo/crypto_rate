@@ -1,70 +1,87 @@
 {
     "ADA (Cardano)": [
         "cardano",
-        "ADA"
+        "ADA",
+        "Cardano"
     ],
     "BBT (BabyBoomToken)": [
         "babyboomtoken",
-        "BBT"
+        "BBT",
+        "BabyBoomToken"
     ],
     "BTC (Bitcoin)": [
         "bitcoin",
-        "BTC"
+        "BTC",
+        "Bitcoin"
     ],
     "CETUS (Cetus Protocol)": [
         "cetus-protocol",
-        "CETUS"
+        "CETUS",
+        "Cetus Protocol"
     ],
     "COW (CoW Protocol)": [
         "cow-protocol",
-        "COW"
+        "COW",
+        "CoW Protocol"
     ],
     "DOGE (Dogecoin)": [
         "dogecoin",
-        "DOGE"
+        "DOGE",
+        "Dogecoin"
     ],
     "ETH (Ethereum)": [
         "ethereum",
-        "ETH"
+        "ETH",
+        "Ethereum"
     ],
     "GRASS": [
         "grass",
+        "GRASS",
         "GRASS"
     ],
     "LINK (Chainlink)": [
         "chainlink",
-        "LINK"
+        "LINK",
+        "Chainlink"
     ],
     "NYM": [
         "nym",
+        "NYM",
         "NYM"
     ],
     "PNUT (Peanut the Squirrel)": [
         "peanut-the-squirrel",
-        "PNUT"
+        "PNUT",
+        "Peanut the Squirrel"
     ],
     "TRUMP (MAGA)": [
         "maga",
-        "TRUMP"
+        "TRUMP",
+        "MAGA"
     ],
     "TRX (TRON)": [
         "tron",
-        "TRX"
+        "TRX",
+        "TRON"
     ],
     "VISTA (Ethervista)": [
         "ethervista",
-        "VISTA"
+        "VISTA",
+        "Ethervista"
     ],
     "XMR (Monero)": [
         "monero",
-        "XMR"
+        "XMR",
+        "Monero"
     ],
     "XRP (Ripple)": [
         "ripple",
-        "XRP"
+        "XRP",
+        "Ripple"
     ],
-    "BOWIE": [
-        "bowie",
-        "BOWIE"
+    "KND (Kindred)": [
+        "kindred",
+        "KND",
+        "Kindred"
     ]
 }

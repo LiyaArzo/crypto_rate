@@ -7,6 +7,7 @@ import pandas as pd
 import requests
 import json
 import os
+import aboutcrypto as ac
 
 
 exchange_rate = None # переменная для курса выбранной криптовалюты
@@ -148,7 +149,7 @@ def show_info():
     show_win = Toplevel()
     show_win.title('Информация о криптовалюте')
     crypto_name = crypto_combo2.get()
-    name_lbl = Label(show_win,text=f'Название криптовалюты: {crypto_name}')
+    name_lbl = Label(show_win,text=f'Название криптовалюты: {crypto_names[crypto_name][2]}')
     name_lbl.pack()
     code_lbl = Label(show_win, text=f'Сокращённое название: {crypto_names[crypto_name][1]}')
     code_lbl.pack()
@@ -164,11 +165,11 @@ def show_info():
     low_day.pack()
     perc_day_l = Label(show_win, text='За день')
     perc_day_l.pack()
-    market = Label(show_win, text='Вы можете купить криптовалюте на рынке ')
+    market = Label(show_win, text='Вы можете купить криптовалюту на рынке')
     market.pack()
-    amount_now = Label(show_win, text='Сейчас в обращении:  ')
+    amount_now = Label(show_win, text='Сейчас в обращении:')
     amount_now.pack()
-    max_amount = Label(show_win, text='Максимально возможное количество:  ')
+    max_amount = Label(show_win, text='Максимально возможное количество валюты в обращении:')
     max_amount.pack()
     try:
         response = requests.get(f'https://api.coingecko.com/api/v3/coins/{crypto_names[crypto_name][0]}')
@@ -176,24 +177,10 @@ def show_info():
         counter += 1  # если не возникло исключение, счетчик увеличится на 1
         counter_lbl.config(text=f'Использовано запросов: {counter}')
         data = response.json()
-        cur_usd.config(text=f'Текущий курс: ${float(data['market_data']['current_price']['usd']):.2f}')
-        max_y,max_m,max_d = data['market_data']['ath_date']['usd'][:10].split('-')
-        max_usd_lbl.config(text=f'Максимальная стоимость: ${float(data['market_data']['ath']['usd']):.2f} ({max_d}.{max_m}.{max_y})')
-        min_y, min_m, min_d = data['market_data']['atl_date']['usd'][:10].split('-')
-        min_usd_lbl.config(text=f'Минимальная стоимость: ${float(data['market_data']['atl']['usd']):.2f} ({min_d}.{min_m}.{min_y})')
-        high_day.config(text=f'Максимальная стоимость за день: ${float(data['market_data']['high_24h']['usd']):.2f}')
-        low_day.config(text=f'Минимальная стоимость за день: ${float(data['market_data']['low_24h']['usd']):.2f}')
-        perc_day = float(data['market_data']['price_change_percentage_24h_in_currency']['usd'])
-        res = 'выросла' if perc_day > 0 else 'уменьшилась' if perc_day < 0 else 'осталась неизменной'
-        perc_day_l.config(text=f'За день стоимость криптовалюты в USD {res} на {perc_day:.2f}%')
-        perc_month = data['market_data']['price_change_percentage_30d_in_currency']['usd']
-        perc_year = data['market_data']['price_change_percentage_1y_in_currency']['usd']
+        ac.about(data)
 
-        amount_now.config(text=f'Сейчас в обращении: {data['market_data']['circulating_supply']} ')
-        max_amount.config(text=f'Максимально возможное количество: {data['market_data']['max_supply']} ')
-        market.config(text=f'Вы можете купить криптовалюту на рынке "{data['tickers'][0]['market']['name']}"')
 
-        # data['image']['thumb'] - ссылка на картинку
+
 
     except Exception as e:
         mb.showerror('Ошибка', f'Возникла ошибка с соединением: {e}')
@@ -203,7 +190,7 @@ def add_crypto():
     global crypto_names
     global counter
     found_cryptos = {}
-    cryptos_id = [crypto_id for key, [crypto_id,name1] in crypto_names.items()] # список id криптовалют библиотеки crypto_names
+    cryptos_id = [crypto_id for key, [crypto_id,short_n, name1] in crypto_names.items()] # список id криптовалют библиотеки crypto_names
     new_crypto = sd.askstring('Добавление', 'Введите полное или сокращённое название криптовалюты,\nнапример, "Bitcoin" или "BTC"')
     if new_crypto:
         new_crypto = new_crypto.strip().lower()
@@ -219,7 +206,7 @@ def add_crypto():
                         name = f'{coin['symbol'].upper()} ({coin['name']})'
                     else:
                         name = coin['symbol'].upper()
-                    found_cryptos[name] = [coin['id'], coin['symbol'].upper()]
+                    found_cryptos[name] = [coin['id'], coin['symbol'].upper(), coin['name']]
             if len(found_cryptos) == 1:
                 answer = mb.askyesno('Добавить?',f'Найдена новая криптовалюта "{name}", добавить?')
                 if answer:
