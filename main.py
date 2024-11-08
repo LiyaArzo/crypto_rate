@@ -145,45 +145,84 @@ def choose_crypto():
 
 def show_info():
     global counter
-    hide_win()
-    show_win = Toplevel()
+    crypto_name = crypto_combo2.get() # получение наименования выбранной криптовалюты
+    hide_win() # скрывается окно выбора криптовалюты
+    show_win = Toplevel() # создается новое окно
     show_win.title('Информация о криптовалюте')
-    crypto_name = crypto_combo2.get()
-    name_lbl = Label(show_win,text=f'Название криптовалюты: {crypto_names[crypto_name][2]}')
-    name_lbl.pack()
-    code_lbl = Label(show_win, text=f'Сокращённое название: {crypto_names[crypto_name][1]}')
-    code_lbl.pack()
-    cur_usd = Label(show_win, text='Текущий курс:')
-    cur_usd.pack()
-    max_usd_lbl = Label(show_win, text='Максимальная стоимость:')
-    max_usd_lbl.pack()
-    min_usd_lbl = Label(show_win, text='Минимальная стоимость:')
-    min_usd_lbl.pack()
-    high_day = Label(show_win, text='Максимальная стоимость за день:')
-    high_day.pack()
-    low_day = Label(show_win, text='Минимальная стоимость за день:')
-    low_day.pack()
-    perc_day_l = Label(show_win, text='За день')
-    perc_day_l.pack()
-    market = Label(show_win, text='Вы можете купить криптовалюту на рынке')
-    market.pack()
-    amount_now = Label(show_win, text='Сейчас в обращении:')
-    amount_now.pack()
-    max_amount = Label(show_win, text='Максимально возможное количество валюты в обращении:')
-    max_amount.pack()
+    show_win.geometry('600x350')
+    Label(show_win, text='Основная информация о криптовалюте', font='Arial 14 bold',bg='white').grid(row=0,column=0,columnspan=5,sticky='ew',pady=10, padx=10)
+    Label(show_win,text='Название криптовалюты:',font='Arial 10', width=28).grid(row=1,column=0,padx=5)
+    Label(show_win, text=f'{crypto_names[crypto_name][2]}',font='Arial 10 bold', bg='white',width=15,borderwidth=2,relief='ridge').grid(row=1,column=1,ipadx=5,ipady=2,padx=2)
+    Label(show_win, text='Сокращённое название:',font='Arial 10').grid(row=2,column=0)
+    Label(show_win, text=f'{crypto_names[crypto_name][1]}',font='Arial 10 bold', bg='white',width=15,borderwidth=2,relief='ridge').grid(row=2,column=1,ipadx=5,ipady=2,padx=2)
+    cur_l = Label(show_win, text='Текущий курс в $:', font='Arial 14 bold')
+    cur_l.grid(row=1, column=2, rowspan=2, columnspan=2, padx=(10, 0))
+    logo_l = Label(show_win, text='Логотип:', font='Arial 10')
+    logo_l.grid(row=1, column=4, rowspan=2)
+    Label(show_win, text='Сейчас в обращении:', font='Arial 10').grid(row=3, column=0)
+    amount_l = Label(show_win, text='', font='Arial 10 bold', bg='white',width=15,borderwidth=2,relief='ridge')
+    amount_l.grid(row=3,column=1,ipadx=5,ipady=2,padx=2)
+    Label(show_win, text='Макс. возможное количество:', font='Arial 10').grid(row=4, column=0)
+    max_amount_l = Label(show_win, text='', font='Arial 10 bold', bg='white', width=15, borderwidth=2, relief='ridge')
+    max_amount_l.grid(row=4,column=1,ipadx=5,ipady=2,padx=2)
+    Label(show_win, text='Исторические значения', font='Arial 12 bold').grid(row=5, column=0,columnspan=2, sticky='ew',pady=(15,2))
+    Label(show_win, text='Максимум:', font='Arial 10').grid(row=6, column=0, sticky='e')
+    max_l = Label(show_win, text='', font='Arial 10 bold', bg='white', width=15, borderwidth=2, relief='ridge')
+    max_l.grid(row=6,column=1,ipadx=5,ipady=2,padx=2)
+    Label(show_win, text='Дата максимума:', font='Arial 10').grid(row=7, column=0, sticky='e')
+    max_date_l = Label(show_win, text='', font='Arial 10 bold', bg='white', width=15, borderwidth=2, relief='ridge')
+    max_date_l.grid(row=7, column=1, ipadx=5, ipady=2, padx=2)
+    Label(show_win, text='Минимум:', font='Arial 10').grid(row=8, column=0, sticky='e')
+    min_l = Label(show_win, text='', font='Arial 10 bold', bg='white', width=15, borderwidth=2, relief='ridge')
+    min_l.grid(row=8, column=1, ipadx=5, ipady=2, padx=2)
+    Label(show_win, text='Дата минимума:', font='Arial 10').grid(row=9, column=0, sticky='e')
+    min_date_l =Label(show_win, text='', font='Arial 10 bold', bg='white', width=15, borderwidth=2, relief='ridge')
+    min_date_l.grid(row=9, column=1, ipadx=5, ipady=2, padx=2)
+    Label(show_win, text='24 часа', font='Arial 10',borderwidth=2, relief='ridge').grid(row=3, column=2, padx=(10, 0))
+    day_l = Label(show_win, text='', font='Arial 10 bold', bg='white', width=5, borderwidth=2, relief='ridge')
+    day_l.grid(row=4, column=2, ipadx=5, ipady=2, padx=(10, 0))
+    Label(show_win, text='30 дней', font='Arial 10',borderwidth=2, relief='ridge').grid(row=3, column=3)
+    month_l = Label(show_win, text='', font='Arial 10 bold', bg='white', width=5, borderwidth=2, relief='ridge')
+    month_l.grid(row=4, column=3, ipadx=5, ipady=2)
+    Label(show_win, text='1 год', font='Arial 10',borderwidth=2, relief='ridge').grid(row=3, column=4)
+    year_l = Label(show_win, text='', font='Arial 10 bold', bg='white', width=6, borderwidth=2, relief='ridge')
+    year_l.grid(row=4, column=4, ipadx=5, ipady=2)
+    market_l = Label(show_win, text='Самая популярная биржа - ', font='Arial 10 bold')
+    market_l.grid(row=10, column=0, columnspan=2, sticky='w', pady=(15, 2), padx=10)
+
+
     try:
         response = requests.get(f'https://api.coingecko.com/api/v3/coins/{crypto_names[crypto_name][0]}')
         response.raise_for_status()
         counter += 1  # если не возникло исключение, счетчик увеличится на 1
         counter_lbl.config(text=f'Использовано запросов: {counter}')
         data = response.json()
-        ac.about(data)
+        ac.about(data) # распределение данных, полученных от api, по переменным
+        cur_l.config(text=f'$ {ac.cur_price}')
+        amount_l.config(text=ac.amount_now)
+        max_amount_l.config(text=ac.max_amount)
+        max_l.config(text=f'$ {ac.max_price}')
+        max_date_l.config(text=ac.max_date)
+        min_l.config(text=f'$ {ac.min_price}')
+        min_date_l.config(text=ac.min_date)
+        day_l.config(text=f' {ac.perc_day}%')
+        day_l.config(foreground='green') if ac.perc_day > 0 else day_l.config(foreground='red')
+        month_l.config(text=f' {ac.perc_month}%')
+        month_l.config(foreground='green') if ac.perc_month > 0 else month_l.config(foreground='red')
+        year_l.config(text=f' {ac.perc_year}%')
+        year_l.config(foreground='green') if ac.perc_year > 0 else year_l.config(foreground='red')
+        market_l.config(text=f'Самая популярная биржа - "{ac.market}"')
+        if ac.logo != '-':
+            logo_l.config(image=ac.logo)
+            logo_l.image = ac.logo # чтобы сборщик мусора не убрал картинку
+
+
 
 
 
 
     except Exception as e:
-        mb.showerror('Ошибка', f'Возникла ошибка с соединением: {e}')
+        mb.showerror('Ошибка', f'Возникла ошибка: {e}')
 
 
 def add_crypto():
