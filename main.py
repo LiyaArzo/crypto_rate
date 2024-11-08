@@ -143,13 +143,13 @@ def choose_crypto():
     btn1.pack()
 
 
-def show_info():
+def show_info(): # функция отображения информации о криптовалюте
     global counter
     crypto_name = crypto_combo2.get() # получение наименования выбранной криптовалюты
     hide_win() # скрывается окно выбора криптовалюты
     show_win = Toplevel() # создается новое окно
     show_win.title('Информация о криптовалюте')
-    show_win.geometry('600x350')
+    show_win.geometry('620x350')
     Label(show_win, text='Основная информация о криптовалюте', font='Arial 14 bold',bg='white').grid(row=0,column=0,columnspan=5,sticky='ew',pady=10, padx=10)
     Label(show_win,text='Название криптовалюты:',font='Arial 10', width=28).grid(row=1,column=0,padx=5)
     Label(show_win, text=f'{crypto_names[crypto_name][2]}',font='Arial 10 bold', bg='white',width=15,borderwidth=2,relief='ridge').grid(row=1,column=1,ipadx=5,ipady=2,padx=2)
@@ -198,6 +198,7 @@ def show_info():
         counter_lbl.config(text=f'Использовано запросов: {counter}')
         data = response.json()
         ac.about(data) # распределение данных, полученных от api, по переменным
+        print('kz',ac.cur_price)
         cur_l.config(text=f'$ {ac.cur_price}')
         amount_l.config(text=ac.amount_now)
         max_amount_l.config(text=ac.max_amount)
@@ -206,11 +207,11 @@ def show_info():
         min_l.config(text=f'$ {ac.min_price}')
         min_date_l.config(text=ac.min_date)
         day_l.config(text=f' {ac.perc_day}%')
-        day_l.config(foreground='green') if ac.perc_day > 0 else day_l.config(foreground='red')
+        day_l.config(foreground='green') if ac.perc_day !='-' and ac.perc_day > 0 else day_l.config(foreground='red')
         month_l.config(text=f' {ac.perc_month}%')
-        month_l.config(foreground='green') if ac.perc_month > 0 else month_l.config(foreground='red')
+        month_l.config(foreground='green') if ac.perc_month !='-' and ac.perc_month > 0 else month_l.config(foreground='red')
         year_l.config(text=f' {ac.perc_year}%')
-        year_l.config(foreground='green') if ac.perc_year > 0 else year_l.config(foreground='red')
+        year_l.config(foreground='green') if ac.perc_year !='-' and ac.perc_year > 0 else year_l.config(foreground='red')
         market_l.config(text=f'Самая популярная биржа - "{ac.market}"')
         if ac.logo != '-':
             logo_l.config(image=ac.logo)
